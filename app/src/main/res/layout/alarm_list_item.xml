@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/alarm_list_date"
+        android:textColor="@color/alarm_list_color"
+        android:textSize="@dimen/alarm_time_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/alarm_name_size"
+        android:textColor="@color/alarm_list_color"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/alarm_list_name"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/alarm_list_date"
+        android:layout_toEndOf="@+id/alarm_list_date" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarm_list_remaining"
+        android:textColor="@color/alarm_list_color"
+        android:text="Za 32 minut"
+        android:textSize="@dimen/alarm_remaining_size"
+        android:layout_below="@+id/alarm_list_name"
+        android:layout_toRightOf="@+id/alarm_list_date"
+        android:layout_toEndOf="@+id/alarm_list_date" />
+
+</RelativeLayout>

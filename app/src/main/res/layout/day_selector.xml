@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <CheckBox
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/day_checkbox"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="0dp"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:text="Po"
+        android:id="@+id/alarm_add_day_monday" />
+
+    <CheckBox
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/day_checkbox"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="0dp"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:text="Út"
+        android:id="@+id/alarm_add_day_tuesday" />
+
+    <CheckBox
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/day_checkbox"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="0dp"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:text="St"
+        android:id="@+id/alarm_add_day_wednesday" />
+
+    <CheckBox
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/day_checkbox"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="0dp"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:text="Čt"
+        android:id="@+id/alarm_add_day_thursday" />
+
+    <CheckBox
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/day_checkbox"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="0dp"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:text="Pá"
+        android:id="@+id/alarm_add_day_friday" />
+
+    <CheckBox
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/day_checkbox"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="0dp"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:text="So"
+        android:id="@+id/alarm_add_day_saturday" />
+
+    <CheckBox
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/day_checkbox"
+
+        android:paddingLeft="0dp"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:text="Ne"
+        android:id="@+id/alarm_add_day_sunday" />
+
+</LinearLayout>

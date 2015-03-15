@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="wake_bg">#2196F3</color>
+    <color name="wake_text">#fff</color>
+    <color name="alarm_list_color">#57000000</color>
+</resources>
