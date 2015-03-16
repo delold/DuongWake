@@ -8,18 +8,17 @@ import android.os.AsyncTask;
  * Vytvořeno David on 14. 3. 2015.
  */
 
-//nevím, jaké jsou konvence pro nazývání generics, rád mám A,B,C
-public abstract class DatabaseTask<A, B, C> extends AsyncTask<A, Void, B> {
+public abstract class DatabaseTask<Params, Result, Listener> extends AsyncTask<Params, Void, Result> {
     private SQLiteOpenHelper mHelper;
-    private C mListener;
+    private Listener mListener;
 
 
-    public DatabaseTask(SQLiteOpenHelper sqLiteOpenHelper, C listener) {
+    public DatabaseTask(SQLiteOpenHelper sqLiteOpenHelper, Listener listener) {
         this.mHelper = sqLiteOpenHelper;
         this.mListener = listener;
     }
 
-    public C getListener() {
+    public Listener getListener() {
         return mListener;
     }
 
@@ -31,11 +30,12 @@ public abstract class DatabaseTask<A, B, C> extends AsyncTask<A, Void, B> {
         return mHelper.getReadableDatabase();
     }
 
+    @SuppressWarnings(value = "unchecked")
     @Override
-    protected abstract B doInBackground(A... params);
+    protected abstract Result doInBackground(Params... params);
 
     @Override
-    protected void onPostExecute(B result) {
+    protected void onPostExecute(Result result) {
         super.onPostExecute(result);
-    };
+    }
 }

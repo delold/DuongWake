@@ -1,16 +1,11 @@
-package cz.duong.duongwake;
+package cz.duong.duongwake.providers;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
-import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 
@@ -18,6 +13,7 @@ import java.util.Collections;
  * Vytvořeno David on 14. 3. 2015.
  */
 public class Alarm implements Parcelable {
+    private long id;
     private String name;
 
     private int hour;
@@ -27,6 +23,8 @@ public class Alarm implements Parcelable {
     private boolean isRepeated;
 
     private ArrayList<Integer> days;
+
+
 
     public Alarm(String name, Integer hour, Integer minute, String days, Boolean enabled, Boolean isRepeated) {
         this.name = name;
@@ -44,11 +42,13 @@ public class Alarm implements Parcelable {
         Collections.sort(this.days);
     }
 
+
     public Alarm(String name, Integer hour, Integer minute, String days, Integer enabled, Integer isRepeated) {
         this(name, hour, minute, days, enabled == 1, isRepeated == 1);
     }
 
     public Alarm(Parcel in) {
+        id = in.readLong();
         name = in.readString();
         hour = in.readInt();
         minute = in.readInt();
@@ -67,6 +67,7 @@ public class Alarm implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeLong(id);
         parcel.writeString(name);
         parcel.writeInt(hour);
         parcel.writeInt(minute);
@@ -95,17 +96,19 @@ public class Alarm implements Parcelable {
 
         //následující dny
         ArrayList<Integer> relativeDays = new ArrayList<>();
-        for(Integer day : days.subList(split, days.size())) {
-            relativeDays.add(day - current_day);
+        if(days.size() > 0) {
+            for(Integer day : days.subList(split, days.size())) {
+                relativeDays.add(day - current_day);
+            }
+            for(Integer nextDay : days.subList(0, split)) {
+                relativeDays.add(nextDay + 7 - current_day);
+            }
+            if(isRepeated()) {
+                relativeDays.add(7);
+            }
+        } else {
+            relativeDays.add(0);
         }
-        for(Integer nextDay : days.subList(0, split)) {
-            relativeDays.add(nextDay + 7 - current_day);
-        }
-
-        if(isRepeated()) {
-            relativeDays.add(7);
-        }
-
 
         for(Integer day : relativeDays) {
             Calendar newCal = (Calendar) calendar.clone();
@@ -122,7 +125,6 @@ public class Alarm implements Parcelable {
 
         return null; //není k dispozici žádný další alarm
     }
-
 
     public String getName() {
         return this.name;
@@ -141,11 +143,18 @@ public class Alarm implements Parcelable {
     }
     public boolean isRepeated() { return this.isRepeated; }
 
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) { this.id = id; }
+    public boolean hasId() { return this.id != 0; }
+
     public void setName(String name) { this.name = name; }
     public void setHour(int hour) { this.hour = hour; }
     public void setMinute(int minute) { this.minute = minute; }
     public void setDays(ArrayList<Integer> days) { this.days = days; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
+
     public void setRepeated(boolean repeated) { this.isRepeated = repeated; }
 
     public String getDaysString() {
@@ -170,7 +179,6 @@ public class Alarm implements Parcelable {
 
     public static class Entry implements BaseColumns {
         public static final String TABLE_NAME = "alarm";
-        public static final String COLUMN_ALARM_ID = "alarmid";
         public static final String COLUMN_ALARM_NAME = "alarmname";
         public static final String COLUMN_ALARM_HOUR = "alarmhour";
         public static final String COLUMN_ALARM_MINUTE = "alarmminute";
@@ -180,7 +188,6 @@ public class Alarm implements Parcelable {
 
         public static final String[] COLUMN_DB = {
             Alarm.Entry._ID + " INTEGER PRIMARY KEY",
-            Alarm.Entry.COLUMN_ALARM_ID + " TEXT",
             Alarm.Entry.COLUMN_ALARM_NAME + " TEXT",
             Alarm.Entry.COLUMN_ALARM_HOUR + " INTEGER",
             Alarm.Entry.COLUMN_ALARM_MINUTE + " INTEGER",

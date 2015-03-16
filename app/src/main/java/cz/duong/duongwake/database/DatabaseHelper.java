@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 
-import cz.duong.duongwake.Alarm;
+import cz.duong.duongwake.providers.Alarm;
 
 /**
  * Vytvořeno David on 14. 3. 2015.
@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "alarms.db";
 
     private static final String SQL_CREATE_ALARMS = "CREATE TABLE " + Alarm.Entry.TABLE_NAME + "("+TextUtils.join(", ", Alarm.Entry.COLUMN_DB)+")";
-    private static final String SQL_DELETE_ALARMS = "DROP TABLE IF EXISTS "+Alarm.Entry.TABLE_NAME;
+    private static final String SQL_DELETE_ALARMS = "DROP TABLE IF EXISTS " + Alarm.Entry.TABLE_NAME;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

@@ -1,4 +1,4 @@
-package cz.duong.duongwake;
+package cz.duong.duongwake.providers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,10 +15,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "Starting service", Toast.LENGTH_LONG).show();
 
-        String tag = cz.duong.duongwake.AlarmManager.INTENT_TAG;
+        String tag = AlarmManager.INTENT_TAG;
 
         Intent act = new Intent(context, WakeActivity.class);
-        act.putExtra(tag, intent.getExtras().getParcelable(tag)); //předej data
+        act.putExtra(tag, intent.getBundleExtra(AlarmManager.INTENT_TAG)); //předej data
         act.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
 
         context.startActivity(act);

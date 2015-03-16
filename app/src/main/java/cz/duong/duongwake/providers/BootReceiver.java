@@ -1,4 +1,4 @@
-package cz.duong.duongwake;
+package cz.duong.duongwake.providers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

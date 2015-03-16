@@ -1,64 +1,83 @@
 package cz.duong.duongwake.activities;
 
 import android.app.Activity;
-import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import java.util.Calendar;
+import java.io.IOException;
 
+import cz.duong.duongwake.providers.Alarm;
+import cz.duong.duongwake.providers.AlarmManager;
 import cz.duong.duongwake.R;
 
 
 public class WakeActivity extends Activity {
 
-    public Vibrator mVibrator;
-
+    private MediaPlayer mPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d("DUONG-WAKE", "time: " + Long.toString(Calendar.getInstance().getTimeInMillis()));
-
-
         setContentView(R.layout.activity_wake);
 
+        if(getIntent() == null || getIntent().getBundleExtra(AlarmManager.INTENT_TAG) == null) {
+            Log.d("DUONG-WAKE", "No alarm in intent, shutting down");
+            finish();
+        } else {
+            Alarm alarm = getIntent().getBundleExtra(AlarmManager.INTENT_TAG).getParcelable(AlarmManager.INTENT_TAG);
 
-        mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        long[] pattern = {0, 1000, 1000};
-
-        //mVibrator.vibrate(pattern, 0);
+            play(true);
+            vibrate(true);
+        }
     }
 
-    @Override
-    protected void onStop() {
-        super.onPause();
+    public void play(boolean toggle) {
+        if(mPlayer == null) {
+            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
-        mVibrator.cancel();
-    }
+            if(alert == null){ //z nějakého důvodu to bylo null
+                alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_wake, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            try {
+                mPlayer = new MediaPlayer();
+                mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                mPlayer.setDataSource(this, alert);
+                mPlayer.setLooping(true);
+                mPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        return super.onOptionsItemSelected(item);
+        if(toggle) {
+            mPlayer.start();
+        } else {
+            mPlayer.stop();
+        }
+    }
+
+    public void vibrate(boolean toggle) {
+        Vibrator mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+        if(toggle) {
+            mVibrator.vibrate(new long[]{0, 1000, 1000}, 0);
+        } else {
+            mVibrator.cancel();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        play(false);
+        vibrate(false);
+
+        AlarmManager.setAlarms(this);
     }
 }

@@ -8,12 +8,13 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:name=".Application"
+        android:screenOrientation="portrait"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".providers.AlarmReceiver" />
 
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".providers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
@@ -33,6 +34,8 @@
 
         <activity
             android:name=".activities.WakeActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
 
             <!--<intent-filter>-->

@@ -13,7 +13,7 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
-import cz.duong.duongwake.Alarm;
+import cz.duong.duongwake.providers.Alarm;
 import cz.duong.duongwake.R;
 import cz.duong.duongwake.listeners.DialogListener;
 
@@ -21,29 +21,28 @@ import cz.duong.duongwake.listeners.DialogListener;
  * Vytvořeno David on 15. 3. 2015.
  */
 public class AddDialog extends Dialog implements View.OnClickListener {
-    private Context mContext;
+
     private Alarm mAlarm;
     private DialogListener mListener;
 
-    private boolean createNew = true;
-
     public AddDialog(Context context, DialogListener listener, Alarm a) {
         super(context);
-        mContext = context;
+
         mListener = listener;
+        mAlarm = a;
 
         if(a == null) {
             Calendar cal = Calendar.getInstance();
             //TODO: STRINGY
-            mAlarm = new Alarm("Alarm", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), "1,2,3", true, false);
-        } else {
-            createNew = false;
-            mAlarm = a;
+            mAlarm = new Alarm("Alarm", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), "", true, false);
         }
     }
 
     public AddDialog(DialogListener listener) {
         this((Context) listener, listener, null);
+    }
+    public AddDialog(DialogListener listener, Alarm a) {
+        this((Context) listener, listener, a);
     }
 
     @Override
@@ -53,7 +52,6 @@ public class AddDialog extends Dialog implements View.OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.edit_alarm);
 
-
         TabHost tabHost = (TabHost) findViewById(R.id.alarm_add_tabhost);
         tabHost.setup();
 
@@ -62,14 +60,11 @@ public class AddDialog extends Dialog implements View.OnClickListener {
 
         Button button = (Button) findViewById(R.id.alarm_add_button);
         button.setOnClickListener(this);
-
-
     }
 
     private TabHost.TabSpec bindTime(TabHost tabHost) {
         //TODO: STRINGY
         TabHost.TabSpec time_spec = tabHost.newTabSpec("Čas");
-
 
         time_spec.setIndicator("Čas");
         time_spec.setContent(R.id.alarm_add_timepicker);
@@ -93,7 +88,6 @@ public class AddDialog extends Dialog implements View.OnClickListener {
         EditText name = (EditText) findViewById(R.id.alarm_add_name);
         DaySelectView daySelect = (DaySelectView) findViewById(R.id.alarm_add_daypicker);
         Switch enabled = (Switch) findViewById(R.id.alarm_add_enabled);
-
 
         name.setText(mAlarm.getName());
         enabled.setChecked(mAlarm.isEnabled());

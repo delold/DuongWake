@@ -11,6 +11,7 @@
         android:layout_marginRight="5dp"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
+        android:textColor="@drawable/day_checkbox_text"
         android:gravity="center"
         android:text="Po"
         android:id="@+id/alarm_add_day_monday" />

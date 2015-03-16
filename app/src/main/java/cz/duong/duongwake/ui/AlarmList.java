@@ -6,16 +6,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Formatter;
 
-import cz.duong.duongwake.Alarm;
+import cz.duong.duongwake.providers.Alarm;
 import cz.duong.duongwake.R;
 
 /**
@@ -82,8 +80,6 @@ public class AlarmList extends BaseAdapter {
 
         holder.date.setText(item.getHour() + ":" + item.getMinute());
         holder.date.setText(formatter.format(mContext.getString(R.string.alarm_list_time), item.getHour(), item.getMinute()).toString());
-
-
 
         if(timestamp != null) {
 

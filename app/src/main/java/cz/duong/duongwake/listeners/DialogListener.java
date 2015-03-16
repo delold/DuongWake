@@ -1,6 +1,6 @@
 package cz.duong.duongwake.listeners;
 
-import cz.duong.duongwake.Alarm;
+import cz.duong.duongwake.providers.Alarm;
 
 /**
  * Vytvořeno David on 15. 3. 2015.

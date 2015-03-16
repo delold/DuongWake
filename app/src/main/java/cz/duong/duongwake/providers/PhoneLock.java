@@ -1,4 +1,4 @@
-package cz.duong.duongwake;
+package cz.duong.duongwake.providers;
 
 import android.app.KeyguardManager;
 import android.content.Context;
