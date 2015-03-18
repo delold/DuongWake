@@ -32,8 +32,9 @@ public class FindAlarmsTask extends DatabaseTask<String, ArrayList<Alarm>, Alarm
             int enabled = c.getInt(c.getColumnIndexOrThrow(Alarm.Entry.COLUMN_ALARM_ENABLED));
             int repeated = c.getInt(c.getColumnIndexOrThrow(Alarm.Entry.COLUMN_ALARM_REPEATED));
             String days = c.getString(c.getColumnIndexOrThrow(Alarm.Entry.COLUMN_ALARM_DAYS));
+            Long time = c.getLong(c.getColumnIndexOrThrow(Alarm.Entry.COLUMN_ALARM_TIME));
 
-            Alarm a = new Alarm(name, hour, minute, days, enabled, repeated);
+            Alarm a = new Alarm(name, hour, minute, days, enabled, repeated, time);
             a.setId(id);
 
             res.add(a);

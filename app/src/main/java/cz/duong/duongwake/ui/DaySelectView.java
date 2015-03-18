@@ -7,6 +7,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,13 +24,14 @@ public class DaySelectView extends LinearLayout {
 
         LayoutInflater.from(context).inflate(R.layout.day_selector, this, true);
 
-        dayToView.put(1, (CheckBox) findViewById(R.id.alarm_add_day_monday));
-        dayToView.put(2, (CheckBox) findViewById(R.id.alarm_add_day_tuesday));
-        dayToView.put(3, (CheckBox) findViewById(R.id.alarm_add_day_wednesday));
-        dayToView.put(4, (CheckBox) findViewById(R.id.alarm_add_day_thursday));
-        dayToView.put(5, (CheckBox) findViewById(R.id.alarm_add_day_friday));
-        dayToView.put(6, (CheckBox) findViewById(R.id.alarm_add_day_saturday));
-        dayToView.put(7, (CheckBox) findViewById(R.id.alarm_add_day_sunday));
+
+        dayToView.put(Calendar.MONDAY, (CheckBox) findViewById(R.id.alarm_add_day_monday));
+        dayToView.put(Calendar.TUESDAY, (CheckBox) findViewById(R.id.alarm_add_day_tuesday));
+        dayToView.put(Calendar.WEDNESDAY, (CheckBox) findViewById(R.id.alarm_add_day_wednesday));
+        dayToView.put(Calendar.THURSDAY, (CheckBox) findViewById(R.id.alarm_add_day_thursday));
+        dayToView.put(Calendar.FRIDAY, (CheckBox) findViewById(R.id.alarm_add_day_friday));
+        dayToView.put(Calendar.SATURDAY, (CheckBox) findViewById(R.id.alarm_add_day_saturday));
+        dayToView.put(Calendar.SUNDAY, (CheckBox) findViewById(R.id.alarm_add_day_sunday));
 
     }
 
@@ -51,7 +53,6 @@ public class DaySelectView extends LinearLayout {
             }
 
         }
-
         return result;
     }
 }

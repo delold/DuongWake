@@ -18,20 +18,21 @@ public class Alarm implements Parcelable {
 
     private int hour;
     private int minute;
-    private boolean enabled;
 
+    private long absoluteTime;
+
+    private boolean enabled;
     private boolean isRepeated;
 
     private ArrayList<Integer> days;
 
-
-
-    public Alarm(String name, Integer hour, Integer minute, String days, Boolean enabled, Boolean isRepeated) {
+    public Alarm(String name, Integer hour, Integer minute, String days, Boolean enabled, Boolean isRepeated, long absoluteTime) {
         this.name = name;
         this.hour = hour;
         this.minute = minute;
         this.enabled = enabled;
         this.isRepeated = isRepeated;
+        this.absoluteTime = absoluteTime;
 
         this.days = new ArrayList<>();
 
@@ -42,9 +43,8 @@ public class Alarm implements Parcelable {
         Collections.sort(this.days);
     }
 
-
-    public Alarm(String name, Integer hour, Integer minute, String days, Integer enabled, Integer isRepeated) {
-        this(name, hour, minute, days, enabled == 1, isRepeated == 1);
+    public Alarm(String name, Integer hour, Integer minute, String days, Integer enabled, Integer isRepeated, long absoluteTime) {
+        this(name, hour, minute, days, enabled == 1, isRepeated == 1, absoluteTime);
     }
 
     public Alarm(Parcel in) {
@@ -54,6 +54,7 @@ public class Alarm implements Parcelable {
         minute = in.readInt();
         enabled = in.readInt() == 1;
         isRepeated = in.readInt() == 1;
+        absoluteTime = in.readLong();
 
         int[] temp = in.createIntArray();
         days = new ArrayList<>();
@@ -73,6 +74,7 @@ public class Alarm implements Parcelable {
         parcel.writeInt(minute);
         parcel.writeInt(enabled ? 1 : 0);
         parcel.writeInt(isRepeated ? 1 : 0);
+        parcel.writeLong(absoluteTime);
 
         int[] temp = new int[days.size()];
         for(int i = 0; i < days.size(); i++) {
@@ -82,13 +84,50 @@ public class Alarm implements Parcelable {
         parcel.writeIntArray(temp);
     }
 
-    public Long getTimestamp(Calendar calendar) {
 
+
+    private Long getOnceTimestamp(Calendar calendar) {
+        if(absoluteTime > 0L) {
+            Calendar pastCal = (Calendar) calendar.clone();
+            pastCal.setTimeInMillis(absoluteTime);
+
+            Calendar alarmCal = (Calendar) pastCal.clone();
+            alarmCal.set(Calendar.HOUR_OF_DAY, getHour());
+            alarmCal.set(Calendar.MINUTE, getMinute());
+            alarmCal.set(Calendar.SECOND, 0);
+            alarmCal.set(Calendar.MILLISECOND, 0);
+
+
+            if (alarmCal.getTimeInMillis() <= pastCal.getTimeInMillis()) {
+                alarmCal.add(Calendar.DATE, 1);
+            }
+
+            if(alarmCal.getTimeInMillis() > calendar.getTimeInMillis()) {
+                return alarmCal.getTimeInMillis();
+            }
+        }
+
+        return null;
+    }
+
+    private Long getRepeatedTimestamp(Calendar calendar) {
         Integer current_day = calendar.get(Calendar.DAY_OF_WEEK);
-        Integer split = current_day;
 
-        for(int index = 0; index < days.size(); index++) {
-            if(days.get(index) >= current_day) {
+
+        //fix pro neděli
+        ArrayList<Integer> tempDays = new ArrayList<>();
+        for(Integer i : days) {
+            if(i == Calendar.SUNDAY) {
+                i += 7;
+            }
+            tempDays.add(i);
+        }
+        current_day += (current_day == Calendar.SUNDAY) ? 7 : 0;
+
+        Integer split = tempDays.size();
+
+        for(int index = 0; index < tempDays.size(); index++) {
+            if(tempDays.get(index) >= current_day) {
                 split = index;
                 break;
             }
@@ -96,19 +135,16 @@ public class Alarm implements Parcelable {
 
         //následující dny
         ArrayList<Integer> relativeDays = new ArrayList<>();
-        if(days.size() > 0) {
-            for(Integer day : days.subList(split, days.size())) {
-                relativeDays.add(day - current_day);
-            }
-            for(Integer nextDay : days.subList(0, split)) {
-                relativeDays.add(nextDay + 7 - current_day);
-            }
-            if(isRepeated()) {
-                relativeDays.add(7);
-            }
-        } else {
-            relativeDays.add(0);
+        
+        for(Integer day : tempDays.subList(split, tempDays.size())) {
+            relativeDays.add(day - current_day);
         }
+
+        for(Integer nextDay : tempDays.subList(0, split)) {
+            relativeDays.add(nextDay + 7 - current_day);
+        }
+
+        relativeDays.add(7);
 
         for(Integer day : relativeDays) {
             Calendar newCal = (Calendar) calendar.clone();
@@ -123,7 +159,11 @@ public class Alarm implements Parcelable {
             }
         }
 
-        return null; //není k dispozici žádný další alarm
+        return null;
+    }
+
+    public Long getTimestamp(Calendar calendar) {
+        return (days.size() > 0) ? getRepeatedTimestamp(calendar) : getOnceTimestamp(calendar);
     }
 
     public String getName() {
@@ -141,7 +181,20 @@ public class Alarm implements Parcelable {
     public boolean isEnabled() {
         return this.enabled;
     }
-    public boolean isRepeated() { return this.isRepeated; }
+    public boolean isRepeated() {
+        return this.isRepeated;
+    }
+    public long getTimeChanged() {
+        return this.absoluteTime;
+    }
+
+    public void setName(String name) { this.name = name; }
+    public void setHour(int hour) { this.hour = hour; }
+    public void setMinute(int minute) { this.minute = minute; }
+    public void setDays(ArrayList<Integer> days) { this.days = days; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    public void setRepeated(boolean repeated) { this.isRepeated = repeated; }
+    public void setTimeChanged(Long time) { this.absoluteTime = time; }
 
     public Long getId() {
         return this.id;
@@ -149,21 +202,15 @@ public class Alarm implements Parcelable {
     public void setId(Long id) { this.id = id; }
     public boolean hasId() { return this.id != 0; }
 
-    public void setName(String name) { this.name = name; }
-    public void setHour(int hour) { this.hour = hour; }
-    public void setMinute(int minute) { this.minute = minute; }
-    public void setDays(ArrayList<Integer> days) { this.days = days; }
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
-
-    public void setRepeated(boolean repeated) { this.isRepeated = repeated; }
-
     public String getDaysString() {
         return TextUtils.join(",", getDays());
     }
     public int getEnabled() {
         return isEnabled() ? 1 : 0;
     }
-    public int getRepeated() { return isRepeated() ? 1 : 0; }
+    public int getRepeated() {
+        return isRepeated() ? 1 : 0;
+    }
 
     public static final Creator CREATOR = new Creator() {
         @Override
@@ -184,26 +231,29 @@ public class Alarm implements Parcelable {
         public static final String COLUMN_ALARM_MINUTE = "alarmminute";
         public static final String COLUMN_ALARM_ENABLED = "alarmenabled";
         public static final String COLUMN_ALARM_REPEATED = "alarmrepeated";
+        public static final String COLUMN_ALARM_TIME = "alarmtime";
         public static final String COLUMN_ALARM_DAYS = "alarmdays";
 
         public static final String[] COLUMN_DB = {
-            Alarm.Entry._ID + " INTEGER PRIMARY KEY",
-            Alarm.Entry.COLUMN_ALARM_NAME + " TEXT",
-            Alarm.Entry.COLUMN_ALARM_HOUR + " INTEGER",
-            Alarm.Entry.COLUMN_ALARM_MINUTE + " INTEGER",
-            Alarm.Entry.COLUMN_ALARM_ENABLED + " INTEGER",
-            Alarm.Entry.COLUMN_ALARM_REPEATED + " INTEGER",
-            Alarm.Entry.COLUMN_ALARM_DAYS + " TEXT"
+            Entry._ID + " INTEGER PRIMARY KEY",
+            Entry.COLUMN_ALARM_NAME + " TEXT",
+            Entry.COLUMN_ALARM_HOUR + " INTEGER",
+            Entry.COLUMN_ALARM_MINUTE + " INTEGER",
+            Entry.COLUMN_ALARM_ENABLED + " INTEGER",
+            Entry.COLUMN_ALARM_REPEATED + " INTEGER",
+            Entry.COLUMN_ALARM_TIME + " INTEGER",
+            Entry.COLUMN_ALARM_DAYS + " TEXT"
         };
 
         public static final String[] SELECTOR_SQL = {
-            Alarm.Entry._ID,
-            Alarm.Entry.COLUMN_ALARM_NAME,
-            Alarm.Entry.COLUMN_ALARM_HOUR,
-            Alarm.Entry.COLUMN_ALARM_MINUTE,
-            Alarm.Entry.COLUMN_ALARM_ENABLED,
-            Alarm.Entry.COLUMN_ALARM_REPEATED,
-            Alarm.Entry.COLUMN_ALARM_DAYS
+            Entry._ID,
+            Entry.COLUMN_ALARM_NAME,
+            Entry.COLUMN_ALARM_HOUR,
+            Entry.COLUMN_ALARM_MINUTE,
+            Entry.COLUMN_ALARM_ENABLED,
+            Entry.COLUMN_ALARM_REPEATED,
+            Entry.COLUMN_ALARM_TIME,
+            Entry.COLUMN_ALARM_DAYS
         };
     }
 

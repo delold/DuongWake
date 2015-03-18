@@ -3,16 +3,18 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- TODO: dynamicky vytvářet dny -->
     <CheckBox
         android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:button="@null"
         android:drawableLeft="@drawable/day_checkbox"
-        android:layout_marginRight="5dp"
+        android:textColor="@drawable/day_checkbox_text"
+        android:layout_marginRight="8dp"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
-        android:textColor="@drawable/day_checkbox_text"
         android:gravity="center"
+
         android:text="Po"
         android:id="@+id/alarm_add_day_monday" />
 
@@ -21,10 +23,12 @@
         android:layout_height="wrap_content"
         android:button="@null"
         android:drawableLeft="@drawable/day_checkbox"
-        android:layout_marginRight="5dp"
+        android:textColor="@drawable/day_checkbox_text"
+        android:layout_marginRight="8dp"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
         android:gravity="center"
+
         android:text="Út"
         android:id="@+id/alarm_add_day_tuesday" />
 
@@ -33,10 +37,12 @@
         android:layout_height="wrap_content"
         android:button="@null"
         android:drawableLeft="@drawable/day_checkbox"
-        android:layout_marginRight="5dp"
+        android:textColor="@drawable/day_checkbox_text"
+        android:layout_marginRight="8dp"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
         android:gravity="center"
+
         android:text="St"
         android:id="@+id/alarm_add_day_wednesday" />
 
@@ -45,10 +51,12 @@
         android:layout_height="wrap_content"
         android:button="@null"
         android:drawableLeft="@drawable/day_checkbox"
-        android:layout_marginRight="5dp"
+        android:textColor="@drawable/day_checkbox_text"
+        android:layout_marginRight="8dp"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
         android:gravity="center"
+
         android:text="Čt"
         android:id="@+id/alarm_add_day_thursday" />
 
@@ -57,10 +65,12 @@
         android:layout_height="wrap_content"
         android:button="@null"
         android:drawableLeft="@drawable/day_checkbox"
-        android:layout_marginRight="5dp"
+        android:textColor="@drawable/day_checkbox_text"
+        android:layout_marginRight="8dp"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
         android:gravity="center"
+
         android:text="Pá"
         android:id="@+id/alarm_add_day_friday" />
 
@@ -69,10 +79,12 @@
         android:layout_height="wrap_content"
         android:button="@null"
         android:drawableLeft="@drawable/day_checkbox"
-        android:layout_marginRight="5dp"
+        android:textColor="@drawable/day_checkbox_text"
+        android:layout_marginRight="8dp"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
         android:gravity="center"
+
         android:text="So"
         android:id="@+id/alarm_add_day_saturday" />
 
@@ -81,10 +93,11 @@
         android:layout_height="wrap_content"
         android:button="@null"
         android:drawableLeft="@drawable/day_checkbox"
-
+        android:textColor="@drawable/day_checkbox_text"
         android:paddingLeft="0dp"
         android:drawablePadding="-32dp"
         android:gravity="center"
+
         android:text="Ne"
         android:id="@+id/alarm_add_day_sunday" />
 

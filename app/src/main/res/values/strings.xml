@@ -1,14 +1,28 @@
 <resources>
     <string name="app_name">DuongWake</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="hello_world2">Wake up!</string>
+    <string name="alarm_title">Alarmy</string>
+
     <string name="action_settings">Settings</string>
     <string name="title_activity_wake">WakeActivity</string>
 
     <string name="add_alarm">Přidat alarm</string>
-
     <string name="alarm_list_time" formatted="false">%02d:%02d</string>
-    
+
+    <string name="alarm_list_expired">Uplynulo</string>
+
+    <string name="alarm_default">Alarm</string>
+
+    <string name="editor_finished">Hotovo</string>
+    <string name="editor_tab_time">Čas</string>
+    <string name="editor_tab_info">Info</string>
+
+    <string name="wake_label">Budíček!</string>
+    <string name="wake_shutdown">Vypnout</string>
+
+    <string-array name="dialog_alarm">
+        <item>Upravit alarm</item>
+        <item>Smazat alarm</item>
+    </string-array>
 
 </resources>

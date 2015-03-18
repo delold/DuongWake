@@ -6,9 +6,11 @@ import android.os.AsyncTask;
 import java.util.ArrayList;
 
 import cz.duong.duongwake.database.tasks.FindAlarmsTask;
+import cz.duong.duongwake.database.tasks.RemoveAlarmTask;
 import cz.duong.duongwake.database.tasks.SetAlarmsTask;
 import cz.duong.duongwake.listeners.AlarmGetListener;
 import cz.duong.duongwake.listeners.AlarmPutListener;
+import cz.duong.duongwake.listeners.AlarmRemoveListener;
 import cz.duong.duongwake.providers.Alarm;
 
 /**
@@ -36,6 +38,10 @@ public class Database {
 
     public AsyncTask<?, Void, ?> findAlarms(String query, AlarmGetListener listener) {
         return new FindAlarmsTask(mHelper, listener).execute(query);
+    }
+
+    public AsyncTask<?, Void, ?> removeAlarm(Alarm a, AlarmRemoveListener listener) {
+        return new RemoveAlarmTask(mHelper, listener).execute(a);
     }
 
     public static void deleteDatabase(Context context) {

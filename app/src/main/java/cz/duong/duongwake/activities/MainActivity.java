@@ -1,5 +1,7 @@
 package cz.duong.duongwake.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -12,17 +14,15 @@ import java.util.ArrayList;
 
 import cz.duong.duongwake.R;
 import cz.duong.duongwake.database.Database;
-import cz.duong.duongwake.listeners.AlarmGetListener;
-import cz.duong.duongwake.listeners.AlarmPutListener;
-import cz.duong.duongwake.listeners.DialogListener;
+import cz.duong.duongwake.listeners.DatabaseListener;
+import cz.duong.duongwake.listeners.AlarmChangeListener;
 import cz.duong.duongwake.providers.Alarm;
 import cz.duong.duongwake.providers.AlarmManager;
 import cz.duong.duongwake.ui.AddDialog;
 import cz.duong.duongwake.ui.AlarmList;
 
 
-public class MainActivity extends ActionBarActivity implements AlarmGetListener, AlarmPutListener, DialogListener, AdapterView.OnItemClickListener {
-
+public class MainActivity extends ActionBarActivity implements DatabaseListener, AlarmChangeListener, AdapterView.OnItemClickListener {
     private Database mDb;
     private AlarmList mAdapter;
 
@@ -31,7 +31,8 @@ public class MainActivity extends ActionBarActivity implements AlarmGetListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAdapter = new AlarmList(this, new ArrayList<Alarm>());
+
+        mAdapter = new AlarmList(this, this, new ArrayList<Alarm>());
 
         ListView view = (ListView) findViewById(R.id.alarm_list);
         view.setAdapter(mAdapter);
@@ -46,6 +47,8 @@ public class MainActivity extends ActionBarActivity implements AlarmGetListener,
         }
 
         mDb.getAlarms(this);
+
+        setTitle(getString(R.string.alarm_title));
 
         super.onResume();
     }
@@ -81,18 +84,43 @@ public class MainActivity extends ActionBarActivity implements AlarmGetListener,
     }
 
     @Override
-    public void onDialogDone(Alarm a) {
+    public void onAlarmRemove(Boolean removed) {
+        if(removed) {
+            AlarmManager.setAlarms(this, mDb);
+            mDb.getAlarms(this);
+        }
+    }
+
+    @Override
+    public void onAlarmChange(Alarm a) {
         ArrayList<Alarm> al = new ArrayList<>();
         al.add(a);
 
         mDb.setAlarms(al, this);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        AlarmList list = (AlarmList) adapterView.getAdapter();
 
-        AddDialog dialog = new AddDialog(this, list.getItem(i));
-        dialog.show();
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+        final AlarmList list = (AlarmList) adapterView.getAdapter();
+        final MainActivity listener = this;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(getResources().getStringArray(R.array.dialog_alarm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int action_pos) {
+                if(action_pos == 0) {
+                    AddDialog dialog = new AddDialog(listener, list.getItem(i));
+                    dialog.show();
+                } else if (action_pos == 1) {
+                    mDb.removeAlarm(list.getItem(i), listener);
+                }
+
+            }
+        });
+
+        builder.show();
     }
+
+
 }

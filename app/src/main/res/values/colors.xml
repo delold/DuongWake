@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="wake_bg">#2196F3</color>
+    <color name="accent">#2196F3</color>
+    <color name="accent_dark">#1E88E5</color>
+
+    <color name="supplementary">#FFC107</color>
+
+    <color name="wake_bg">@color/accent</color>
     <color name="wake_text">#fff</color>
-    <color name="alarm_list_color">#57000000</color>
+    <color name="alarm_list_color">#88000000</color>
+
+    <color name="button_selected">#11000000</color>
+
+    <color name="tab_selected">@color/accent</color>
+    <color name="tab_unselected">#fff</color>
 </resources>

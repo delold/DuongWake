@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,13 +24,11 @@ public class AlarmManager {
     public static final String INTENT_TAG = "alarmitem";
 
     public static void setAlarms(Context context, ArrayList<Alarm> alarms) {
-
         //odstraň všechny přebývající alarmy
         clearPendings(context, alarms);
 
         SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a", Locale.ENGLISH);
         Log.d("DUONG-SETALARM", "setting alarm at: " + format.format(Calendar.getInstance().getTime()));
-
 
         Calendar calendar = Calendar.getInstance();
 
@@ -41,6 +38,7 @@ public class AlarmManager {
             assignAlarm(context, alarm, calendar);
         } else {
             Log.d("DUONG-WAKE", "Žádné alarmy");
+            toggleNotification(context, false);
         }
     }
 
@@ -61,12 +59,15 @@ public class AlarmManager {
                 manager.set(android.app.AlarmManager.RTC_WAKEUP, timestamp, intent);
             }
 
-            Intent alarmChanged = new Intent("android.intent.action.ALARM_CHANGED");
-            alarmChanged.putExtra("alarmSet", true);
-            context.sendBroadcast(alarmChanged);
-        }
+            toggleNotification(context, true);
 
-        Toast.makeText(context, "Set Alarm", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static void toggleNotification(Context context, boolean toggle) {
+        Intent alarmChanged = new Intent("android.intent.action.ALARM_CHANGED");
+        alarmChanged.putExtra("alarmSet", toggle);
+        context.sendBroadcast(alarmChanged);
     }
 
     public static Alarm findClosestAlarm(Calendar cal, ArrayList<Alarm> alarms) {
@@ -75,7 +76,7 @@ public class AlarmManager {
         for(Alarm alarm : alarms) {
             Long time = alarm.getTimestamp(cal);
 
-            if(time != null && (min == 0L || (time < min))) {
+            if(time != null && (min == 0L || (time < min)) && alarm.isEnabled()) {
                 min = time;
                 min_alarm = alarm;
             }
@@ -103,6 +104,8 @@ public class AlarmManager {
             manager.cancel(AlarmManager.createPending(context, a));
         }
     }
+
+
 
     public static void setAlarms(final Context context, final Database db) {
         try {

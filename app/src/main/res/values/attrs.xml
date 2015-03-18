@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AlarmButtonView">
+        <attr name="backgroundColor" format="color" />
+        <attr name="helperColor" format="color" />
+        <attr name="circleSize" format="dimension" />
+        <attr name="circleColor" format="color" />
+        <attr name="textCircle" format="string" />
+        <attr name="textSize" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="DaySelectView">
+        <attr name="itemWidth" format="dimension" />
+    </declare-styleable>
+</resources>

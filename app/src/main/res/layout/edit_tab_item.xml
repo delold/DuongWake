@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:textColor="@color/wake_text"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:background="@drawable/tabs_selector"
+        android:textStyle="bold"
+        android:text="New Text"
+        android:id="@+id/alarm_add_tab_item"
+        android:gravity="center" />
+</LinearLayout>

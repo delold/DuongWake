@@ -5,6 +5,6 @@ import cz.duong.duongwake.providers.Alarm;
 /**
  * Vytvořeno David on 15. 3. 2015.
  */
-public interface DialogListener {
-    public void onDialogDone(Alarm a);
+public interface AlarmChangeListener {
+    public void onAlarmChange(Alarm a);
 }

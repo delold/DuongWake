@@ -3,19 +3,21 @@ package cz.duong.duongwake.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
 
 import cz.duong.duongwake.providers.Alarm;
 import cz.duong.duongwake.R;
-import cz.duong.duongwake.listeners.DialogListener;
+import cz.duong.duongwake.listeners.AlarmChangeListener;
 
 /**
  * Vytvořeno David on 15. 3. 2015.
@@ -23,9 +25,9 @@ import cz.duong.duongwake.listeners.DialogListener;
 public class AddDialog extends Dialog implements View.OnClickListener {
 
     private Alarm mAlarm;
-    private DialogListener mListener;
+    private AlarmChangeListener mListener;
 
-    public AddDialog(Context context, DialogListener listener, Alarm a) {
+    public AddDialog(Context context, AlarmChangeListener listener, Alarm a) {
         super(context);
 
         mListener = listener;
@@ -33,15 +35,16 @@ public class AddDialog extends Dialog implements View.OnClickListener {
 
         if(a == null) {
             Calendar cal = Calendar.getInstance();
-            //TODO: STRINGY
-            mAlarm = new Alarm("Alarm", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), "", true, false);
+            String name = context.getString(R.string.alarm_default);
+
+            mAlarm = new Alarm(name, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), "", true, false, 0L);
         }
     }
 
-    public AddDialog(DialogListener listener) {
+    public AddDialog(AlarmChangeListener listener) {
         this((Context) listener, listener, null);
     }
-    public AddDialog(DialogListener listener, Alarm a) {
+    public AddDialog(AlarmChangeListener listener, Alarm a) {
         this((Context) listener, listener, a);
     }
 
@@ -62,11 +65,22 @@ public class AddDialog extends Dialog implements View.OnClickListener {
         button.setOnClickListener(this);
     }
 
-    private TabHost.TabSpec bindTime(TabHost tabHost) {
-        //TODO: STRINGY
-        TabHost.TabSpec time_spec = tabHost.newTabSpec("Čas");
+    private View constructIndicator(String label) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.edit_tab_item, null);
 
-        time_spec.setIndicator("Čas");
+        TextView text = (TextView) view.findViewById(R.id.alarm_add_tab_item);
+        text.setText(label);
+
+        return view;
+    }
+
+    private TabHost.TabSpec bindTime(TabHost tabHost) {
+        String label = getContext().getString(R.string.editor_tab_time);
+
+        TabHost.TabSpec time_spec = tabHost.newTabSpec(label);
+
+        time_spec.setIndicator(constructIndicator(label));
+
         time_spec.setContent(R.id.alarm_add_timepicker);
 
         TimePicker picker = (TimePicker) findViewById(R.id.alarm_add_timepicker);
@@ -79,15 +93,15 @@ public class AddDialog extends Dialog implements View.OnClickListener {
     }
 
     private TabHost.TabSpec bindInfo(TabHost tabHost) {
-        //TODO: STRINGY
-        TabHost.TabSpec info_spec = tabHost.newTabSpec("Info");
+        String label = getContext().getString(R.string.editor_tab_info);
+        TabHost.TabSpec info_spec = tabHost.newTabSpec(label);
 
-        info_spec.setIndicator("Info");
+        info_spec.setIndicator(constructIndicator(label));
         info_spec.setContent(R.id.alarm_add_info);
 
         EditText name = (EditText) findViewById(R.id.alarm_add_name);
         DaySelectView daySelect = (DaySelectView) findViewById(R.id.alarm_add_daypicker);
-        Switch enabled = (Switch) findViewById(R.id.alarm_add_enabled);
+        SwitchCompat enabled = (SwitchCompat) findViewById(R.id.alarm_add_enabled);
 
         name.setText(mAlarm.getName());
         enabled.setChecked(mAlarm.isEnabled());
@@ -101,15 +115,15 @@ public class AddDialog extends Dialog implements View.OnClickListener {
         TimePicker picker = (TimePicker) findViewById(R.id.alarm_add_timepicker);
         EditText name = (EditText) findViewById(R.id.alarm_add_name);
         DaySelectView daySelect = (DaySelectView) findViewById(R.id.alarm_add_daypicker);
-        Switch enabled = (Switch) findViewById(R.id.alarm_add_enabled);
+        SwitchCompat enabled = (SwitchCompat) findViewById(R.id.alarm_add_enabled);
 
         mAlarm.setDays(daySelect.getDays());
         mAlarm.setName(name.getText().toString());
-        mAlarm.setEnabled(enabled.isEnabled());
+        mAlarm.setEnabled(enabled.isChecked());
         mAlarm.setHour(picker.getCurrentHour());
         mAlarm.setMinute(picker.getCurrentMinute());
 
-        mListener.onDialogDone(mAlarm);
+        mListener.onAlarmChange(mAlarm);
 
         dismiss();
     }

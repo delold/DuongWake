@@ -19,14 +19,19 @@ public class SetAlarmsTask extends DatabaseTask<ArrayList<Alarm>, ArrayList<Alar
         super(sqLiteOpenHelper, listener);
     }
 
-    @SuppressWarnings(value = "unchecked")
+
     @Override
     protected ArrayList<Alarm> doInBackground(ArrayList<Alarm>... params) {
+        Long time = System.currentTimeMillis();
+
         ArrayList<Alarm> alarms = params[0];
 
         SQLiteDatabase db = getWritableDatabase();
 
         for(Alarm alarm : alarms) {
+
+            alarm.setTimeChanged(time);
+
             ContentValues values = new ContentValues();
             values.put(Alarm.Entry.COLUMN_ALARM_NAME, alarm.getName());
             values.put(Alarm.Entry.COLUMN_ALARM_HOUR, alarm.getHour());
@@ -34,6 +39,7 @@ public class SetAlarmsTask extends DatabaseTask<ArrayList<Alarm>, ArrayList<Alar
             values.put(Alarm.Entry.COLUMN_ALARM_ENABLED, alarm.getEnabled());
             values.put(Alarm.Entry.COLUMN_ALARM_REPEATED, alarm.getRepeated());
             values.put(Alarm.Entry.COLUMN_ALARM_DAYS, alarm.getDaysString());
+            values.put(Alarm.Entry.COLUMN_ALARM_TIME, alarm.getTimeChanged());
 
             if(alarm.hasId()) {
                 String query = Alarm.Entry._ID + " LIKE ?";
