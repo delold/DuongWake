@@ -41,6 +41,7 @@ public class FindAlarmsTask extends DatabaseTask<String, ArrayList<Alarm>, Alarm
         }
 
         c.close();
+        db.close();
 
         return res;
     }

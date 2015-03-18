@@ -57,6 +57,8 @@ public class SetAlarmsTask extends DatabaseTask<ArrayList<Alarm>, ArrayList<Alar
 
         }
 
+        db.close();
+
         return alarms;
     }
 

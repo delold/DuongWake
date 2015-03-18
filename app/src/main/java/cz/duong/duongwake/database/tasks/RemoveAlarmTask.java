@@ -25,6 +25,8 @@ public class RemoveAlarmTask extends DatabaseTask<Alarm, Boolean, AlarmRemoveLis
 
         int count = db.delete(Alarm.Entry.TABLE_NAME, query, query_values);
 
+        db.close();
+
         return count >= 1;
     }
 
