@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 import cz.duong.duongwake.R;
 import cz.duong.duongwake.database.Database;
-import cz.duong.duongwake.listeners.DatabaseListener;
 import cz.duong.duongwake.listeners.AlarmChangeListener;
+import cz.duong.duongwake.listeners.DatabaseListener;
 import cz.duong.duongwake.providers.Alarm;
 import cz.duong.duongwake.providers.AlarmManager;
 import cz.duong.duongwake.ui.AddDialog;

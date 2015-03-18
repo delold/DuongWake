@@ -23,12 +23,26 @@ import cz.duong.duongwake.R;
 /**
  * Vytvořeno David on 14. 3. 2015.
  */
-public class AlarmList extends BaseAdapter {
+public class AlarmList extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
     private Context mContext;
     private AlarmChangeListener mListener;
     private ArrayList<Alarm> mData;
 
+    private boolean switchUpdated = true;
+
     private final Handler mHandler;
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switchUpdated = false;
+
+        Alarm item = (Alarm) compoundButton.getTag();
+
+        if(item.isEnabled() != b) {
+            item.setEnabled(b);
+            mListener.onAlarmChange(item);
+        }
+    }
 
     public static class ViewHolder {
         private TextView name;
@@ -44,17 +58,18 @@ public class AlarmList extends BaseAdapter {
 
         mHandler = new Handler();
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChanged();
-                mHandler.postDelayed(this, 1000);
-            }
-        }, 1000);
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                notifyDataSetChanged();
+//                mHandler.postDelayed(this, 1000);
+//            }
+//        }, 1000);
     }
 
     public void update(ArrayList<Alarm> data) {
         mData = data;
+        switchUpdated = true;
         notifyDataSetChanged();
     }
 
@@ -92,7 +107,7 @@ public class AlarmList extends BaseAdapter {
 
         Calendar cal = Calendar.getInstance();
 
-        final Alarm item = getItem(pos);
+        Alarm item = getItem(pos);
         holder.name.setText(item.getName());
 
         Long timestamp = item.getTimestamp(cal);
@@ -102,27 +117,34 @@ public class AlarmList extends BaseAdapter {
 
         if(!item.isEnabled()) {
             holder.remaining.setText("");
+
         } else if(timestamp != null) {
             String relative = (String) DateUtils.getRelativeTimeSpanString(timestamp, System.currentTimeMillis(), 0L);
-            Log.d("DUONG-WAKE", relative);
             holder.remaining.setText(relative);
 
-            holder.switchEnable.setEnabled(true);
-            holder.switchEnable.setChecked(item.isEnabled());
 
         } else {
             holder.remaining.setText(mContext.getText(R.string.alarm_list_expired));
-
-            holder.switchEnable.setEnabled(false);
         }
 
-        holder.switchEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                item.setEnabled(b);
-                mListener.onAlarmChange(item);
-            }
-        });
+
+
+
+
+        holder.switchEnable.setTag(item);
+        holder.switchEnable.setOnCheckedChangeListener(this);
+
+        if(timestamp == null) {
+            holder.switchEnable.setEnabled(false);
+        } else {
+            holder.switchEnable.setEnabled(true);
+        }
+
+        if(switchUpdated) {
+            holder.switchEnable.setChecked(item.isEnabled());
+        }
+
+
 
         return view;
     }
